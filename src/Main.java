@@ -1,12 +1,16 @@
-
 public class Main {
 	public static void main (String[] args)
 	{
-		if(args[0].equals("ebtest"))
-		{
-			System.out.println("Event Barrier:");
-			EventBarrierTest.test();
-		}
+    switch(args[0]) {
+      case "ebtest":
+        System.out.println("Event Barrier:");
+        EventBarrierTest.test();
+        break;
+      case "buildingTest":
+        System.out.println("Building Test:");
+        Test.test();
+        break;
+    }
 	}
 
 }

@@ -35,7 +35,7 @@ public class EventBarrier extends AbstractEventBarrier {
 		return;
 	}
 
-	/**s
+	/**
 	 * Signal the event and block until all threads that wait for this
  	 * event have responded. The EventBarrier returns to an unsignaled state
  	 * before raise() returns.
