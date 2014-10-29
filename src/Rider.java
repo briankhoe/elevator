@@ -5,7 +5,20 @@ public class Rider implements Runnable {
   public Runner () {
     curFloor = 0;
   }
+
   public void run() {
+
+  }
+
+  public void CallUp() {
+
+  }
+
+  public void CallDown() {
+
+  }
+
+  public void requestFloor(int fromFloor) {
 
   }
 }

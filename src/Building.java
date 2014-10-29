@@ -15,16 +15,20 @@ public class Building extends AbstractBuilding {
 
   @Override
   public synchronized AbstractElevator CallUp(int fromFloor) {
-    return null;
+    int bestElevator = findBestElevator(fromFloor, 1);
+    elevators.get(bestElevator).addFloorToAppropriateQueue(fromFloor);
   }
 
   @Override
   public synchronized AbstractElevator CallDown(int fromFloor) {
-    return null;
+    int bestElevator = findBestElevator(fromFloor, -1);
+    elevators.get(bestElevator).addFloorToAppropriateQueue(fromFloor);
   }
 
-  public int findBestElevator() {
-    return 0;
+  public int findBestElevator(int fromFloor, int direction) {
+    Elevator[] tempElevators = elevators.toArray(new Elevator[elevators.size()]);
+    Arrays.sort(tempElevators);
+    return tempElevators[0];
   }
 
 }

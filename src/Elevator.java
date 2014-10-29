@@ -1,6 +1,9 @@
+import java.util.List;
+import java.util.ArrayList;
+
 public class Elevator extends AbstractElevator {
 
-  private EventBarrier eventBarrier;
+  private List<EventBarrier> eventBarriers;
   private int curFloor;
   private int curDirection;
   private int occupancy;
@@ -10,7 +13,9 @@ public class Elevator extends AbstractElevator {
 
   public Elevator(int numFloors, int elevatorId, int maxOccupancyThreshold) {
     super(numFloors, elevatorId, maxOccupancyThreshold);
-    eventBarrier = new EventBarrier();
+    for(int i = 0; i < numFloors; i++) {
+      eventBarriers.add(new EventBarrier());
+    }
     curFloor = 0;
     curDirection = 0;
     occupancy = 0;
@@ -31,7 +36,9 @@ public class Elevator extends AbstractElevator {
 
   @Override
   public synchronized void VisitFloor(int floor) {
-
+    // curFloor = floor;
+    curFloor = floor;
+    eventBarriers.get(curFloor);
   }
 
   @Override
@@ -52,6 +59,14 @@ public class Elevator extends AbstractElevator {
 
   @Override
   public synchronized void RequestFloor(int floor) {
+    addFloorToAppropriateQueue(floor);
+  }
+
+  public EventBarrier getEventBarrier() {
+    return eventBarrier;
+  }
+
+  public void addFloorToAppropriateQueue(int floor) {
     if(floorsIncreasing.contains(floor) || floorsDecreasing.contains(floor)) {
       return;
     }
@@ -63,7 +78,8 @@ public class Elevator extends AbstractElevator {
     }
   }
 
-  public EventBarrier getEventBarrier() {
-    return eventBarrier;
+  // While pq not empty visitFloor(floor), switch to other pq if empty, but if that's empty just change direction to 0
+  private void serveJobs() {
+
   }
 }
