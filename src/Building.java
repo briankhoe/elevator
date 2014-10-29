@@ -28,7 +28,7 @@ public class Building extends AbstractBuilding {
   public int findBestElevator(int fromFloor, int direction) {
     Elevator[] tempElevators = elevators.toArray(new Elevator[elevators.size()]);
     Arrays.sort(tempElevators);
-    return tempElevators[0];
+    return tempElevators[0].elevatorId;
   }
 
 }

@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class Elevator extends AbstractElevator {
 
-  private List<EventBarrier> eventBarriers;
+  private List<List<EventBarrier>> eventBarriers;
   private int curFloor;
   private int curDirection;
   private int occupancy;
@@ -27,6 +27,7 @@ public class Elevator extends AbstractElevator {
   @Override
   public synchronized void OpenDoors() {
     isDoorOpen = true;
+    eventBarriers.get(curFloor).raise();
   }
 
   @Override
@@ -36,9 +37,8 @@ public class Elevator extends AbstractElevator {
 
   @Override
   public synchronized void VisitFloor(int floor) {
-    // curFloor = floor;
     curFloor = floor;
-    eventBarriers.get(curFloor);
+    OpenDoors();
   }
 
   @Override
@@ -49,6 +49,7 @@ public class Elevator extends AbstractElevator {
     }
     return false;
   }
+  // If over capacity, return fail, and call a new elevator
 
   @Override
   public synchronized void Exit() {
@@ -65,7 +66,7 @@ public class Elevator extends AbstractElevator {
   public EventBarrier getEventBarrier() {
     return eventBarrier;
   }
-
+  // Just make sure multiple riders calling add to queue aren't skipping floors
   public void addFloorToAppropriateQueue(int floor) {
     if(floorsIncreasing.contains(floor) || floorsDecreasing.contains(floor)) {
       return;
