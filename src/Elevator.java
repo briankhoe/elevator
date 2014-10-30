@@ -3,18 +3,23 @@ import java.util.ArrayList;
 
 public class Elevator extends AbstractElevator {
 
-  private List<List<EventBarrier>> eventBarriers;
+  private EventBarrier[] exitEventBarriers;
+  private EventBarrier[] enterEventBarriers;
   private int curFloor;
   private int curDirection;
   private int occupancy;
   private PriorityQueue<Integer> floorsIncreasing;
   private PriorityQueue<Integer> floorsDecreasing;
   private boolean isDoorOpen;
+  private List<Rider> riders;
 
   public Elevator(int numFloors, int elevatorId, int maxOccupancyThreshold) {
     super(numFloors, elevatorId, maxOccupancyThreshold);
+    exitEventBarriers = new EventBarrier[numFloors];
+    enterEventBarriers = new EventBarrier[numFloors];
     for(int i = 0; i < numFloors; i++) {
-      eventBarriers.add(new EventBarrier());
+      exitEventBarriers[i] = new EventBarrier();
+      enterEventBarriers[i] = new EventBarrier();
     }
     curFloor = 0;
     curDirection = 0;
@@ -22,21 +27,55 @@ public class Elevator extends AbstractElevator {
     floorsIncreasing = new PriorityQueue<Integer>(numFloors);
     floorsDecreasing = new PriorityQueue<Integer>(numFloors, Collections.reverseOrder());
     isDoorOpen = false;
+    riders = new ArrayList<Rider>();
+  }
+
+  private void serveJobs() {
+    while(!floorsIncreasing.isEmpty() || !floorsDecreasing.isEmpty()) {
+      if(curDirection > 0) {
+        while(!floorsIncreasing.isEmpty()) {
+          VisitFloor(floorsIncreasing.poll());
+        }
+        curDirection = -1;
+      }
+      else {
+        while(!floorsDecreasing.isEmpty()) {
+          VisitFloor(floorsDecreasing.poll());
+        }
+        curDirection = 1;
+      }
+    }
+    curDirection = 0;
   }
 
   @Override
-  public synchronized void OpenDoors() {
+  public void OpenDoors() {
+    System.out.println("Doors opening");
     isDoorOpen = true;
-    eventBarriers.get(curFloor).raise();
+    exitEventBarriers[curFloor].raise();
+    enterEventBarriers[curFloor].raise();
+    ClosedDoors();
   }
 
   @Override
-  public synchronized void ClosedDoors() {
+  public void ClosedDoors() {
+    System.out.println("Doors closing");
     isDoorOpen = false;
   }
 
   @Override
   public synchronized void VisitFloor(int floor) {
+    System.out.println("Heading to floor " + floor);
+    if(curFloor < floor) {
+      for(int i = curFloor; i <= floor; i++) {
+        System.out.println("On floor " + floor);
+      }
+    }
+    if(curFloor > floor) {
+      for(int i = curFloor; i >= floor; i--) {
+        System.out.println("On floor " + floor);
+      }
+    }
     curFloor = floor;
     OpenDoors();
   }
@@ -44,6 +83,7 @@ public class Elevator extends AbstractElevator {
   @Override
   public synchronized boolean Enter() {
     if(occupancy < maxOccupancyThreshold) {
+      riders.add((Rider) Thread.currentThread());
       occupancy++;
       return true;
     }
@@ -63,9 +103,6 @@ public class Elevator extends AbstractElevator {
     addFloorToAppropriateQueue(floor);
   }
 
-  public EventBarrier getEventBarrier() {
-    return eventBarrier;
-  }
   // Just make sure multiple riders calling add to queue aren't skipping floors
   public void addFloorToAppropriateQueue(int floor) {
     if(floorsIncreasing.contains(floor) || floorsDecreasing.contains(floor)) {
@@ -79,8 +116,7 @@ public class Elevator extends AbstractElevator {
     }
   }
 
-  // While pq not empty visitFloor(floor), switch to other pq if empty, but if that's empty just change direction to 0
-  private void serveJobs() {
-
+  public EventBarrier getEventBarrier() {
+    return eventBarrier;
   }
 }

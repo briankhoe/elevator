@@ -3,32 +3,36 @@ import java.util.ArrayList;
 
 public class Building extends AbstractBuilding {
 
-  private List<Elevator> elevators;
+  private Elevator[] elevators;
 
   public Building(int numFloors, int numElevators, int maxOccupancyThreshold) {
     super(numFloors, numElevators);
-    elevators = new ArrayList<Elevator>();
+    elevators = new Elevator[numFloors];
     for(int i = 0; i < numElevators; i++) {
-      elevators.add(new Elevator(numFloors, i, maxOccupancyThreshold));
+      elevators[i] = new Elevator(numFloors, i, maxOccupancyThreshold);
     }
   }
 
   @Override
   public synchronized AbstractElevator CallUp(int fromFloor) {
+    System.out.println("Rider has called elevator up from " + fromFloor);
     int bestElevator = findBestElevator(fromFloor, 1);
-    elevators.get(bestElevator).addFloorToAppropriateQueue(fromFloor);
+    Elevator curElevator = elevators[bestElevator];
+    curElevator.addFloorToAppropriateQueue(fromFloor);
+    return curElevator;
   }
 
   @Override
   public synchronized AbstractElevator CallDown(int fromFloor) {
+    System.out.println("Rider has called elevator down from " + fromFloor);
     int bestElevator = findBestElevator(fromFloor, -1);
-    elevators.get(bestElevator).addFloorToAppropriateQueue(fromFloor);
+    Elevator curElevator = elevators[bestElevator];
+    curElevator.addFloorToAppropriateQueue(fromFloor);
+    return curElevator;
   }
 
   public int findBestElevator(int fromFloor, int direction) {
-    Elevator[] tempElevators = elevators.toArray(new Elevator[elevators.size()]);
-    Arrays.sort(tempElevators);
-    return tempElevators[0].elevatorId;
+    return 0;
   }
 
 }
