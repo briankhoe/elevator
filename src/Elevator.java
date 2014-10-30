@@ -12,8 +12,9 @@ public class Elevator extends AbstractElevator {
   private PriorityQueue<Integer> floorsDecreasing;
   private boolean isDoorOpen;
   private List<Rider> riders;
+  private List<Rider>[] ridersOutside;
 
-  public Elevator(int numFloors, int elevatorId, int maxOccupancyThreshold) {
+  public Elevator(int numFloors, int elevatorId, int maxOccupancyThreshold, List<Rider>[] ridersOutside) {
     super(numFloors, elevatorId, maxOccupancyThreshold);
     exitEventBarriers = new EventBarrier[numFloors];
     enterEventBarriers = new EventBarrier[numFloors];
@@ -28,6 +29,7 @@ public class Elevator extends AbstractElevator {
     floorsDecreasing = new PriorityQueue<Integer>(numFloors, Collections.reverseOrder());
     isDoorOpen = false;
     riders = new ArrayList<Rider>();
+    this.ridersOutside = ridersOutside;
   }
 
   private void serveJobs() {
@@ -83,8 +85,12 @@ public class Elevator extends AbstractElevator {
   @Override
   public synchronized boolean Enter() {
     if(occupancy < maxOccupancyThreshold) {
-      riders.add((Rider) Thread.currentThread());
+      Rider curRider = (Rider) Thread.currentThread();
+      riders.add(curRider);
+      ridersOutside[curFloor].remove(curRider);
       occupancy++;
+      enterEventBarriers[curFloor].complete();
+      System.out.println("Rider " + curRider.getRiderId + " has entered the elevator");
       return true;
     }
     return false;
@@ -116,7 +122,11 @@ public class Elevator extends AbstractElevator {
     }
   }
 
-  public EventBarrier getEventBarrier() {
-    return eventBarrier;
+  public EventBarrier getExitEventBarriers() {
+    return exitEventBarriers;
+  }
+
+  public EventBarrier getEnterEventBarriers(int fromFloor) {
+    return enterEventBarriers[fromFloor];
   }
 }
