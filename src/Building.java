@@ -46,7 +46,50 @@ public class Building extends AbstractBuilding {
 	}
 
 	public int findBestElevator(int fromFloor, int direction) {
-		return 0;
+    List<Elevator> elevatorsGoingInSameDirection = new ArrayList<Elevator>();
+    List<Elevator> elevatorsNotGoingInSameDirection = new ArrayList<Elevator>();
+    // Separate elevators into:
+    // elevators going in the same direction as the call and that will pass the fromFloor on its path
+    // and other elevators
+    for(int i = 0; i < elevators.length; i++) {
+      Elevator curElevator = elevators[i];
+      if(fromFloor >= curElevator.getCurrentFloor() && direction == 1 && elevator.getCurrentDirection() >= 0 ||
+         (fromFloor <= curElevator.getCurrentFloor() && direction == -1 && elevator.getCurrentDirection <= 0)) {
+        elevatorsGoingInSameDirection.add(curElevator);
+      }
+      else {
+        elevatorsNotGoingInSameDirection.add(curElevator);
+      }
+    }
+    // Out of elevators going in the same direction, find the closest one
+    int minDistance = Integer.MAX_VALUE;
+    Elevator bestElevator = null;
+    for(int j = 0; j < elevatorsGoingInSameDirection.size(); j++) {
+      Elevator tempElevator = elevatorsGoingInSameDirection.get(j);
+      if(tempElevator.getOccupancy() < tempElevator.getMaxOccupancy()) {
+        if(Math.abs(fromFloor - tempElevator.getCurrentFloor()) < minDistance) {
+          bestElevator = tempElevator;
+        }
+      }
+    }
+    // If an elevator going in the same direction doesn't exist,
+    // find the elevator going in the opposite direction with max distance (will turn around/become stationary sooner)
+    if(bestElevator == null) {
+      int maxDistance = Integer.MIN_VALUE;
+      for(int k = 0; k < elevatorsNotGoingInSameDirection.size(); k++) {
+        Elevator tempElevator2 = elevatorsNotGoingInSameDirection.get(k);
+        if(tempElevator2.getOccupancy < tempElevator2.getMaxOccupancy()) {
+          if(Math.abs(fromFloor - tempElevator2.getCurrentFloor()) > maxDistance) {
+            bestElevator = tempElevator2;
+          }
+        }
+      }
+    }
+    // If it's still null, just return 0 because there's currently no available elevator that is not filled to capacity
+    if(bestElevator == null) {
+      return 0;
+    }
+    return bestElevator.getElevatorId();
 	}
 
 	public List<List<Rider>> getRidersOutsite() {

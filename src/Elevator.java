@@ -145,4 +145,16 @@ public class Elevator extends AbstractElevator {
 	public EventBarrier getEnterEventBarriers(int fromFloor) {
 		return enterEventBarriers[fromFloor];
 	}
+
+	public int getOccupancy() {
+		return occupancy;
+	}
+
+	public int getMaxOccupancy() {
+		return maxOccupancyThreshold;
+	}
+
+	public int getElevatorId() {
+		return elevatorId;
+	}
 }
