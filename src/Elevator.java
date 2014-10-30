@@ -6,7 +6,7 @@ import java.util.PriorityQueue;
 public class Elevator extends AbstractElevator {
 
 	private EventBarrier[] exitEventBarriers;
-	// public static EventBarrier[] enterEventBarriers;
+	public static EventBarrier[] enterEventBarriers;
 	private int curFloor;
 	private int curDirection;
 	private int occupancy;
