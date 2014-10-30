@@ -10,7 +10,7 @@ public class Building extends AbstractBuilding {
 
 	public Building(int numFloors, int numElevators, int maxOccupancyThreshold) {
 		super(numFloors, numElevators);
-    enterEventBarriers = new EventBarrier[numFloors];)
+    enterEventBarriers = new EventBarrier[numFloors];
 		ridersOutside = new ArrayList<List<Rider>>();
 		for(int j = 0; j < numFloors; j++) {
 			ridersOutside.add(new ArrayList<Rider>());
