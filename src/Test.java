@@ -1,7 +1,7 @@
 public class Test {
 
   public static void test() {
-    Building building = new Building(20, 1, Integer.MAX_VALUE);
+    Building building = new Building(20, 2, Integer.MAX_VALUE);
     ElevatorThread elevator = new ElevatorThread(building);
     Rider rider1 = new Rider(1, 19, 3, building);
     rider1.start();

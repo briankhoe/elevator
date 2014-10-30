@@ -63,8 +63,8 @@ public class Building extends AbstractBuilding {
     // and other elevators
     for(int i = 0; i < elevators.length; i++) {
       Elevator curElevator = elevators[i];
-      if(fromFloor >= curElevator.getCurrentFloor() && direction == 1 && elevator.getCurrentDirection() >= 0 ||
-         (fromFloor <= curElevator.getCurrentFloor() && direction == -1 && elevator.getCurrentDirection <= 0)) {
+      if(fromFloor >= curElevator.getCurrentFloor() && direction == 1 && curElevator.getCurrentDirection() >= 0 ||
+         (fromFloor <= curElevator.getCurrentFloor() && direction == -1 && curElevator.getCurrentDirection() <= 0)) {
         elevatorsGoingInSameDirection.add(curElevator);
       }
       else {
@@ -88,7 +88,7 @@ public class Building extends AbstractBuilding {
       int maxDistance = Integer.MIN_VALUE;
       for(int k = 0; k < elevatorsNotGoingInSameDirection.size(); k++) {
         Elevator tempElevator2 = elevatorsNotGoingInSameDirection.get(k);
-        if(tempElevator2.getOccupancy < tempElevator2.getMaxOccupancy()) {
+        if(tempElevator2.getOccupancy() < tempElevator2.getMaxOccupancy()) {
           if(Math.abs(fromFloor - tempElevator2.getCurrentFloor()) > maxDistance) {
             bestElevator = tempElevator2;
           }
@@ -106,8 +106,9 @@ public class Building extends AbstractBuilding {
 		return ridersOutside;
 	}
 	
-	public Elevator getElevator() {
-		return elevators[0];
+	public Elevator[] getElevator() {
+		//return elevators[0];
+		return elevators;
 	}
 
 }

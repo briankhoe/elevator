@@ -6,7 +6,7 @@ import java.util.PriorityQueue;
 public class Elevator extends AbstractElevator {
 
 	private EventBarrier[] exitEventBarriers;
-	private EventBarrier[] enterEventBarriers;
+	public static EventBarrier[] enterEventBarriers;
 	private int curFloor;
 	private int curDirection;
 	private int occupancy;
@@ -16,15 +16,16 @@ public class Elevator extends AbstractElevator {
 	private List<Rider> riders;
 	private List<List<Rider>> ridersOutside;
 
-	public Elevator(int numFloors, int elevatorId, int maxOccupancyThreshold, List<List<Rider>> ridersOutside) {
+	public Elevator(int numFloors, int elevatorId, int maxOccupancyThreshold, List<List<Rider>> ridersOutside, EventBarrier[] enterEventBarriers) {
 		super(numFloors, elevatorId, maxOccupancyThreshold);
 		exitEventBarriers = new EventBarrier[numFloors];
-		enterEventBarriers = new EventBarrier[numFloors];
+		// enterEventBarriers = new EventBarrier[numFloors];
 		for(int i = 0; i < numFloors; i++) {
 			exitEventBarriers[i] = new EventBarrier();
-			enterEventBarriers[i] = new EventBarrier();
+			// enterEventBarriers[i] = new EventBarrier();
 		}
-		// this.enterEventBarriers = enterEventBarriers;
+		//enterEventBarriers = this.enterEventBarriers;
+		this.enterEventBarriers = enterEventBarriers;
 		curFloor = 0;
 		curDirection = 0;
 		occupancy = 0;
@@ -157,5 +158,15 @@ public class Elevator extends AbstractElevator {
 
 	public int getElevatorId() {
 		return elevatorId;
+	}
+	
+	public int getCurrentFloor()
+	{
+		return curFloor;
+	}
+	
+	public int getCurrentDirection()
+	{
+		return curDirection;
 	}
 }

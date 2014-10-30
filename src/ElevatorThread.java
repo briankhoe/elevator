@@ -1,6 +1,6 @@
 
 public class ElevatorThread extends Thread{
-	AbstractElevator elevator;
+	AbstractElevator elevator[];
 	
 	public ElevatorThread(Building building) {
 		elevator = building.getElevator();
@@ -9,7 +9,10 @@ public class ElevatorThread extends Thread{
 	@Override
 	public void run() {
 		System.out.println("Before serve jobs");
-		((Elevator) elevator).serveJobs();
+		for(int i=0; i < elevator.length; i++)
+		{
+			((Elevator) elevator[i]).serveJobs();
+		}
 		System.out.println("After serve jobs");
 	}
 }
